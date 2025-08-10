@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard - Vendor Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: 'rgba(26, 179, 148, 0.1)',
+                            500: '#1ab394',
+                            600: '#148f77',
+                        },
+                        secondary: {
+                            500: '#6c757d',
+                            600: '#5a6268',
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter bg-gray-50 h-screen overflow-hidden">
+    <div class="flex h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-80 bg-white border-r border-gray-200 flex flex-col h-screen overflow-y-auto">
+            <div class="p-6 border-b border-gray-100">
+                <div class="flex items-center gap-2 text-xl font-semibold text-primary-500">
+                    <i class="fas fa-handshake text-2xl"></i>
+                    <span>Client Portal</span>
+                </div>
+                <p class="text-sm text-gray-600 mt-1">Manage Your Vendors</p>
+            </div>
+            
+            <nav class="flex-1 py-6">
+                <div class="mb-8 px-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Client Selection</h3>
+                    <select id="clientSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all">
+                        <option value="">Select Client...</option>
+                    </select>
+                </div>
+                
+                <div class="mb-8 px-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Overview</h3>
+                    <div class="flex flex-col gap-2 mb-6">
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <div class="text-xl font-bold text-primary-500 mb-1" id="totalVendors">0</div>
+                            <div class="text-xs text-gray-600 uppercase tracking-wide">Active Vendors</div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <div class="text-xl font-bold text-primary-500 mb-1" id="totalSurveys">0</div>
+                            <div class="text-xs text-gray-600 uppercase tracking-wide">Active Surveys</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Navigation</h3>
+                    <div class="flex flex-col gap-1">
+                        <a href="/" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-all">
+                            <i class="fas fa-clipboard-list text-sm"></i>
+                            <span class="text-sm">Question Library</span>
+                        </a>
+                        <a href="superadmin.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-all">
+                            <i class="fas fa-users-cog text-sm"></i>
+                            <span class="text-sm">SuperAdmin</span>
+                        </a>
+                        <a href="partner-dashboard.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-all">
+                            <i class="fas fa-building text-sm"></i>
+                            <span class="text-sm">Partner Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="p-6 border-t border-gray-100">
+                <button id="addVendorBtn" class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-all duration-200 font-medium" disabled>
+                    <i class="fas fa-plus"></i>
+                    Add Vendor
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 gap-8">
+                <div class="flex-1">
+                    <h1 class="text-2xl font-semibold text-gray-900 mb-1">Vendor Management</h1>
+                    <p class="text-sm text-gray-600">Manage your suppliers and service providers</p>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="relative min-w-80">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="text" id="searchInput" placeholder="Search vendors..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="flex-1 overflow-y-auto p-8">
+                <div class="max-w-6xl">
+                    <!-- Client Info Banner -->
+                    <div id="clientInfo" class="hidden mb-6 bg-primary-50 border border-primary-200 rounded-lg p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-primary-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-building text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900" id="selectedClientName"></h3>
+                                <p class="text-sm text-gray-600">
+                                    <span id="selectedClientIndustry"></span> • 
+                                    <span id="selectedClientSize"></span> • 
+                                    Partner: <span id="selectedClientPartner"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vendors Grid -->
+                    <div id="vendorsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Vendors will be loaded here -->
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div id="emptyState" class="text-center py-16 text-gray-600">
+                        <div class="text-6xl text-gray-400 mb-6">
+                            <i class="fas fa-building-user"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Select a client to get started</h3>
+                        <p class="text-base mb-8 max-w-md mx-auto">Choose a client from the dropdown to view and manage their vendors.</p>
+                    </div>
+
+                    <!-- No Vendors State -->
+                    <div id="noVendorsState" class="hidden text-center py-16 text-gray-600">
+                        <div class="text-6xl text-gray-400 mb-6">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">No vendors found</h3>
+                        <p class="text-base mb-8 max-w-md mx-auto">Start by adding your first vendor or supplier.</p>
+                        <button class="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-all font-medium" onclick="clientDashboard.showVendorModal()">
+                            <i class="fas fa-plus"></i>
+                            Add First Vendor
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Vendor Modal -->
+    <div id="vendorModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-screen overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                <div class="flex flex-col">
+                    <div id="vendorIdBadge" class="text-sm text-gray-500 font-mono mb-1 hidden">VID <span id="displayVendorId"></span></div>
+                    <h2 id="vendorModalTitle" class="text-xl font-semibold text-gray-900">Add Vendor</h2>
+                </div>
+                <button class="modal-close text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-md transition-all" aria-label="Close modal">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            
+            <form id="vendorForm" class="flex-1 overflow-y-auto p-6">
+                <div class="mb-6">
+                    <label for="vendorName" class="block text-sm font-medium text-gray-900 mb-2">Company Name</label>
+                    <input type="text" id="vendorName" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" required placeholder="e.g., SteelWorks Ltd">
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="mb-6">
+                        <label for="vendorIndustry" class="block text-sm font-medium text-gray-900 mb-2">Industry</label>
+                        <select id="vendorIndustry" name="industry" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all">
+                            <option value="">Select Industry</option>
+                            <option value="Manufacturing">Manufacturing</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Energy">Energy</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Packaging">Packaging</option>
+                            <option value="Materials">Materials</option>
+                            <option value="Construction">Construction</option>
+                            <option value="Food & Beverage">Food & Beverage</option>
+                            <option value="Chemicals">Chemicals</option>
+                            <option value="Professional Services">Professional Services</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="vendorType" class="block text-sm font-medium text-gray-900 mb-2">Vendor Type</label>
+                        <select id="vendorType" name="vendor_type" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all">
+                            <option value="">Select Type</option>
+                            <option value="Supplier">Supplier</option>
+                            <option value="Service Provider">Service Provider</option>
+                            <option value="Contractor">Contractor</option>
+                            <option value="Distributor">Distributor</option>
+                            <option value="Manufacturer">Manufacturer</option>
+                            <option value="Consultant">Consultant</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="mb-6">
+                        <label for="vendorEmail" class="block text-sm font-medium text-gray-900 mb-2">Contact Email</label>
+                        <input type="email" id="vendorEmail" name="contact_email" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" placeholder="contact@vendor.com">
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="vendorPhone" class="block text-sm font-medium text-gray-900 mb-2">Contact Phone</label>
+                        <input type="tel" id="vendorPhone" name="contact_phone" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" placeholder="+1 (555) 123-4567">
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label for="vendorAddress" class="block text-sm font-medium text-gray-900 mb-2">Address</label>
+                    <textarea id="vendorAddress" name="address" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all min-h-20 resize-vertical" rows="2" 
+                              placeholder="Vendor headquarters address..."></textarea>
+                </div>
+            </form>
+
+            <div class="flex justify-end gap-4 p-6 border-t border-gray-200 bg-gray-50">
+                <button type="button" id="cancelVendorBtn" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-all font-medium">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+                <button type="submit" form="vendorForm" id="saveVendorBtn" class="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-all font-medium">
+                    <i class="fas fa-save"></i>
+                    Save Vendor
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loading" class="hidden fixed inset-0 bg-white bg-opacity-90 z-50 flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-10 h-10 border-4 border-gray-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-gray-600 text-sm">Loading...</p>
+        </div>
+    </div>
+
+    <script src="client-dashboard.js"></script>
+</body>
+</html>

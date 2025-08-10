@@ -1,0 +1,51 @@
+/* Minimal CSS for hover effects and transitions that need JavaScript integration */
+
+.question-item:hover .question-actions {
+    opacity: 1;
+}
+
+/* Drag and drop styles */
+.question-item {
+    transition: all 0.2s ease;
+}
+
+.question-item:hover .drag-handle {
+    opacity: 1;
+}
+
+.drag-handle {
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.question-item.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Custom scrollbar styling for sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 2px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Smooth transitions for category expansion */
+.category-content {
+    transition: max-height 0.3s ease;
+}
+
+.expand-toggle {
+    transition: transform 0.2s ease;
+}

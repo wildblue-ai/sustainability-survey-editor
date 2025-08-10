@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Preview - SustainEdit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: 'rgba(26, 179, 148, 0.1)',
+                            500: '#1ab394',
+                            600: '#148f77',
+                        },
+                        secondary: {
+                            500: '#6c757d',
+                            600: '#5a6268',
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-4">
+                    <a href="/superadmin.html" class="flex items-center gap-2 text-primary-500 hover:text-primary-600 transition-all">
+                        <i class="fas fa-arrow-left"></i>
+                        <span class="font-medium">Back to Dashboard</span>
+                    </a>
+                    <div class="h-6 w-px bg-gray-300"></div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-clipboard-check text-primary-500"></i>
+                        <h1 class="text-xl font-semibold text-gray-900">Survey Preview</h1>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-sm text-gray-600" id="surveyProgress">
+                        <span id="currentCategory">-</span> • <span id="progressText">Loading...</span>
+                    </div>
+                    <button onclick="surveyPreview.logout()" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-all">
+                        <i class="fas fa-sign-out-alt text-xs"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main layout with sidebar -->
+    <div class="flex min-h-screen bg-gray-50">
+        <!-- Left sidebar with category navigation -->
+        <aside class="w-80 bg-white shadow-lg border-r border-gray-200">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Categories</h3>
+                <p class="text-sm text-gray-600 mt-1">Select a category to preview</p>
+            </div>
+            <nav class="p-4" id="categoryTabs">
+                <!-- Category navigation will be populated here -->
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1 px-8 py-8">
+        <!-- Category header -->
+        <div id="categoryHeader" class="mb-8">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900" id="categoryTitle">Loading...</h2>
+                        <p class="text-gray-600 mt-1" id="categoryDescription">Please wait while we load the survey questions.</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <div class="text-sm text-gray-500">Question</div>
+                            <div class="text-xl font-bold text-primary-500" id="questionCounter">-/-</div>
+                        </div>
+                        <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center">
+                            <i class="fas fa-leaf text-primary-500 text-xl" id="categoryIcon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions container -->
+        <div id="questionsContainer">
+            <!-- Questions will be loaded here -->
+        </div>
+
+        <!-- Navigation footer -->
+        <div class="mt-12 flex items-center justify-between">
+            <button id="prevButton" onclick="surveyPreview.previousCategory()" 
+                    class="flex items-center gap-2 px-6 py-3 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="fas fa-chevron-left"></i>
+                <span>Previous</span>
+            </button>
+            
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-500">Category</span>
+                <span class="px-3 py-1 bg-primary-50 text-primary-600 rounded-full text-sm font-medium" id="categoryPosition">-/-</span>
+            </div>
+            
+            <button id="nextButton" onclick="surveyPreview.nextCategory()" 
+                    class="flex items-center gap-2 px-6 py-3 text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                <span>Next</span>
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        </main>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loading" class="fixed inset-0 bg-white bg-opacity-90 z-50 flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-12 h-12 border-4 border-gray-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-gray-600">Loading survey preview...</p>
+        </div>
+    </div>
+
+    <!-- Message container for notifications -->
+    <div id="messageContainer" class="fixed top-4 right-4 z-50 space-y-2">
+        <!-- Messages will be inserted here -->
+    </div>
+
+    <script src="survey-preview.js"></script>
+</body>
+</html>

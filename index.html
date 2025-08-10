@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability Survey Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: 'rgba(26, 179, 148, 0.1)',
+                            500: '#1ab394',
+                            600: '#148f77',
+                        },
+                        secondary: {
+                            500: '#6c757d',
+                            600: '#5a6268',
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter bg-gray-50 h-screen overflow-hidden">
+    <div class="flex h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-80 bg-white border-r border-gray-200 flex flex-col h-screen overflow-y-auto">
+            <div class="p-6 border-b border-gray-100">
+                <div class="flex items-center gap-2 text-xl font-semibold text-primary-500">
+                    <i class="fas fa-leaf text-2xl"></i>
+                    <span>SustainEdit</span>
+                </div>
+            </div>
+            
+            <nav class="flex-1 py-4">
+                <div class="mb-6 px-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Overview</h3>
+                    <div class="flex flex-col gap-2 mb-4">
+                        <div class="bg-gray-50 p-3 rounded-lg text-center">
+                            <div class="text-xl font-bold text-primary-500 mb-1" id="totalQuestions">0</div>
+                            <div class="text-xs text-gray-600 uppercase tracking-wide">Total Questions</div>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg text-center">
+                            <div class="text-xl font-bold text-primary-500 mb-1" id="totalCategories">0</div>
+                            <div class="text-xs text-gray-600 uppercase tracking-wide">Categories</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-6 mb-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Survey Tools</h3>
+                    <div class="flex flex-col gap-1 mb-6" id="surveyTools">
+                        <!-- Survey tools will be populated based on user role -->
+                    </div>
+                </div>
+                
+                <div class="px-6 mb-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Dashboards</h3>
+                    <div class="flex flex-col gap-1 mb-6">
+                        <a href="superadmin.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-all">
+                            <i class="fas fa-users-cog text-sm"></i>
+                            <span class="text-sm">SuperAdmin</span>
+                        </a>
+                        <a href="partner-dashboard.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-all">
+                            <i class="fas fa-building text-sm"></i>
+                            <span class="text-sm">Partner Portal</span>
+                        </a>
+                        <a href="client-dashboard.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-all">
+                            <i class="fas fa-handshake text-sm"></i>
+                            <span class="text-sm">Client Portal</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="px-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Categories</h3>
+                    <div class="flex flex-col gap-1" id="categoryNav">
+                        <!-- Category navigation will be populated here -->
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="p-6 border-t border-gray-100">
+                <button id="addNewBtn" class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-all duration-200 font-medium">
+                    <i class="fas fa-plus"></i>
+                    Add New Question
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 gap-8">
+                <div class="flex-1">
+                    <h1 class="text-2xl font-semibold text-gray-900 mb-1">Question Library</h1>
+                    <p class="text-sm text-gray-600">Manage your sustainability survey questions</p>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="relative min-w-80">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input type="text" id="searchInput" placeholder="Search questions..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all">
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="addQuestionBtn" class="inline-flex items-center gap-2 px-3 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-all text-sm font-medium">
+                            <i class="fas fa-plus text-xs"></i>
+                            <span>Add Question</span>
+                        </button>
+                        <button id="expandAllBtn" class="inline-flex items-center gap-2 px-2 py-2 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-all text-sm font-medium">
+                            <i class="fas fa-expand-alt text-xs"></i>
+                            <span class="hidden lg:inline">Expand All</span>
+                        </button>
+                        <button id="collapseAllBtn" class="inline-flex items-center gap-2 px-2 py-2 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-all text-sm font-medium">
+                            <i class="fas fa-compress-alt text-xs"></i>
+                            <span class="hidden lg:inline">Collapse All</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="flex-1 overflow-y-auto p-6">
+                <div id="categoriesContainer" class="flex flex-col gap-4 max-w-4xl">
+                    <!-- Categories will be loaded here -->
+                </div>
+                
+                <!-- Empty State -->
+                <div id="emptyState" class="text-center py-16 text-gray-600" style="display: none;">
+                    <div class="text-6xl text-gray-400 mb-6">
+                        <i class="fas fa-clipboard-question"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No questions found</h3>
+                    <p class="text-base mb-8 max-w-md mx-auto">Start building your sustainability survey by adding your first question.</p>
+                    <button class="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-all font-medium" onclick="editor.showModal()">
+                        <i class="fas fa-plus"></i>
+                        Create First Question
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Question Modal -->
+    <div id="questionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-screen overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                <div class="flex flex-col">
+                    <div id="questionIdBadge" class="text-sm text-gray-500 font-mono mb-1 hidden">QID <span id="displayQuestionId"></span></div>
+                    <h2 id="modalTitle" class="text-xl font-semibold text-gray-900">Add New Question</h2>
+                </div>
+                <button class="modal-close text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-md transition-all" aria-label="Close modal">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            
+            <form id="questionForm" class="flex-1 overflow-y-auto p-6">
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="mb-6">
+                        <label for="category" class="block text-sm font-medium text-gray-900 mb-2">Category</label>
+                        <select id="category" name="category" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" required>
+                            <option value="">Select Category</option>
+                            <option value="GHG">Greenhouse Gas Emissions</option>
+                            <option value="Energy">Energy</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Water">Water</option>
+                            <option value="Eco Impacts">Eco Impacts</option>
+                            <option value="Waste">Waste</option>
+                            <option value="Materials">Materials</option>
+                            <option value="Circularity">Circularity</option>
+                            <option value="Employee H&S">Employee Health & Safety</option>
+                            <option value="Employee Experience">Employee Experience</option>
+                            <option value="DEI">Diversity, Equity & Inclusion</option>
+                            <option value="Community">Community</option>
+                            <option value="Customer">Customer</option>
+                            <option value="Supply Chain">Supply Chain</option>
+                            <option value="G&L">Governance & Leadership</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="questionOrder" class="block text-sm font-medium text-gray-900 mb-2">Question Order</label>
+                        <input type="number" id="questionOrder" name="questionOrder" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" min="1" required>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label for="questionText" class="block text-sm font-medium text-gray-900 mb-2">Question Text</label>
+                    <textarea id="questionText" name="questionText" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all min-h-24 resize-vertical" rows="4" required 
+                              placeholder="Enter your question text here..."></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="mb-6">
+                        <label for="questionType" class="block text-sm font-medium text-gray-900 mb-2">Question Type</label>
+                        <select id="questionType" name="questionType" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" required>
+                            <option value="">Select Type</option>
+                            <option value="Systems">Systems</option>
+                            <option value="Best Practice">Best Practice</option>
+                            <option value="Performance">Performance</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="answerType" class="block text-sm font-medium text-gray-900 mb-2">Answer Type</label>
+                        <select id="answerType" name="answerType" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" required>
+                            <option value="">Select Answer Type</option>
+                            <option value="boolean">Yes/No</option>
+                            <option value="numeric">Numeric</option>
+                            <option value="multiple_choice_single">Multiple Choice (Select One)</option>
+                            <option value="multiple_choice_multiple">Multiple Choice (Select Multiple)</option>
+                            <option value="multiple_choice_yesno">Multiple Choice (Yes/No Each)</option>
+                            <option value="percentage">Percentage</option>
+                            <option value="free_text">Free Text Entry</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="mb-6">
+                        <label for="effortRating" class="block text-sm font-medium text-gray-900 mb-2">Effort Rating</label>
+                        <input type="number" id="effortRating" name="effortRating" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" 
+                               min="0" max="5" step="0.1" placeholder="0.0 - 5.0">
+                    </div>
+                    <div class="mb-6">
+                        <label for="impactRating" class="block text-sm font-medium text-gray-900 mb-2">Impact Rating</label>
+                        <input type="number" id="impactRating" name="impactRating" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" 
+                               min="0" max="5" step="0.1" placeholder="0.0 - 5.0">
+                    </div>
+                    <div class="mb-6">
+                        <label for="maxPoints" class="block text-sm font-medium text-gray-900 mb-2">Max Points</label>
+                        <input type="number" id="maxPoints" name="maxPoints" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" min="0" required>
+                    </div>
+                </div>
+            </form>
+
+            <div class="flex justify-between p-6 border-t border-gray-200 bg-gray-50">
+                <button type="button" id="deleteBtn" class="hidden inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all font-medium">
+                    <i class="fas fa-trash"></i>
+                    Delete Question
+                </button>
+                <div class="flex gap-4 ml-auto">
+                    <button type="button" id="cancelBtn" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-all font-medium">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </button>
+                    <button type="submit" form="questionForm" id="saveBtn" class="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-all font-medium">
+                        <i class="fas fa-save"></i>
+                        Save Question
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loading" class="hidden fixed inset-0 bg-white bg-opacity-90 z-50 flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-10 h-10 border-4 border-gray-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-gray-600 text-sm">Loading...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

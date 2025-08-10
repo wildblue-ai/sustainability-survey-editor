@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SustainEdit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: 'rgba(26, 179, 148, 0.1)',
+                            500: '#1ab394',
+                            600: '#148f77',
+                        },
+                        secondary: {
+                            500: '#6c757d',
+                            600: '#5a6268',
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter bg-gradient-to-br from-primary-50 to-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full">
+        <!-- Login Card -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-leaf text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-900">SustainEdit</h1>
+                </div>
+                <p class="text-gray-600">Sign in to your account</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-900 mb-2">
+                        Login As
+                    </label>
+                    <div class="relative">
+                        <i class="fas fa-user-tag absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <select 
+                            id="role" 
+                            name="role" 
+                            required 
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all"
+                            onchange="updateLoginForm()"
+                        >
+                            <option value="">Select your role...</option>
+                            <option value="superadmin">SuperAdmin</option>
+                            <option value="client_partner">Client Partner</option>
+                            <option value="client">Client</option>
+                            <option value="vendor">Vendor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-900 mb-2">
+                        Email Address
+                    </label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required 
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all"
+                            placeholder="Enter your email"
+                        >
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-900 mb-2">
+                        Password
+                    </label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            required 
+                            class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all"
+                            placeholder="Enter your password"
+                        >
+                        <button 
+                            type="button" 
+                            id="togglePassword" 
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button 
+                    type="submit" 
+                    id="loginButton"
+                    class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 focus:outline-none focus:ring-3 focus:ring-primary-50 transition-all font-medium"
+                >
+                    <span id="loginButtonText">Sign In</span>
+                    <i id="loginSpinner" class="fas fa-spinner fa-spin hidden"></i>
+                </button>
+            </form>
+
+            <!-- Demo Accounts -->
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <h3 class="text-sm font-medium text-gray-900 mb-4 text-center">Quick Login</h3>
+                
+                <!-- Role-based account display -->
+                <div id="demoAccountsContainer">
+                    <div class="text-center text-gray-500 text-sm py-4">
+                        Select a role above to see demo accounts
+                    </div>
+                </div>
+                
+                <p class="text-xs text-center text-gray-500 mt-4">
+                    All demo accounts use password: <span class="font-mono font-medium">password123</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8">
+            <p class="text-sm text-gray-600">
+                Sustainability Survey Management System
+            </p>
+        </div>
+    </div>
+
+    <!-- Error/Success Messages -->
+    <div id="messageContainer" class="fixed top-4 right-4 z-50 space-y-2">
+        <!-- Messages will be inserted here -->
+    </div>
+
+    <script>
+        class LoginManager {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                // Check if already logged in
+                this.checkAuthStatus();
+            }
+
+            setupEventListeners() {
+                // Form submission
+                document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
+                
+                // Password toggle
+                document.getElementById('togglePassword').addEventListener('click', () => this.togglePassword());
+
+                // Enter key on form fields
+                document.querySelectorAll('#email, #password').forEach(input => {
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+                        }
+                    });
+                });
+            }
+
+            async checkAuthStatus() {
+                try {
+                    const response = await fetch('/api/auth/status');
+                    const data = await response.json();
+                    
+                    if (data.success && data.authenticated) {
+                        // User is already logged in, redirect
+                        window.location.href = '/';
+                    }
+                } catch (error) {
+                    console.error('Auth status check error:', error);
+                }
+            }
+
+            togglePassword() {
+                const passwordInput = document.getElementById('password');
+                const toggleButton = document.getElementById('togglePassword');
+                const icon = toggleButton.querySelector('i');
+
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    passwordInput.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            }
+
+            async handleLogin(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(e.target);
+                const email = formData.get('email');
+                const password = formData.get('password');
+                const selectedRole = formData.get('role');
+
+                if (!selectedRole) {
+                    this.showMessage('Please select your role', 'error');
+                    return;
+                }
+
+                if (!email || !password) {
+                    this.showMessage('Please enter both email and password', 'error');
+                    return;
+                }
+
+                this.setLoading(true);
+
+                try {
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email, password, expectedRole: selectedRole }),
+                        credentials: 'include'
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        this.showMessage('Login successful! Redirecting...', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 1000);
+                    } else {
+                        this.showMessage(data.error || 'Login failed', 'error');
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showMessage('Network error. Please try again.', 'error');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            setLoading(loading) {
+                const button = document.getElementById('loginButton');
+                const text = document.getElementById('loginButtonText');
+                const spinner = document.getElementById('loginSpinner');
+
+                button.disabled = loading;
+                
+                if (loading) {
+                    text.textContent = 'Signing In...';
+                    spinner.classList.remove('hidden');
+                    button.classList.add('opacity-75');
+                } else {
+                    text.textContent = 'Sign In';
+                    spinner.classList.add('hidden');
+                    button.classList.remove('opacity-75');
+                }
+            }
+
+            showMessage(message, type = 'info') {
+                const container = document.getElementById('messageContainer');
+                const messageDiv = document.createElement('div');
+                
+                const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+                const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+                
+                messageDiv.className = `${bgColor} text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 transform transition-all duration-300 translate-x-full`;
+                messageDiv.innerHTML = `
+                    <i class="fas ${icon}"></i>
+                    <span>${message}</span>
+                `;
+
+                container.appendChild(messageDiv);
+
+                // Animate in
+                setTimeout(() => {
+                    messageDiv.classList.remove('translate-x-full');
+                }, 10);
+
+                // Remove after delay
+                setTimeout(() => {
+                    messageDiv.classList.add('translate-x-full');
+                    setTimeout(() => {
+                        if (messageDiv.parentNode) {
+                            messageDiv.remove();
+                        }
+                    }, 300);
+                }, type === 'success' ? 2000 : 4000);
+            }
+        }
+
+        // Demo accounts data
+        const demoAccounts = {
+            superadmin: [
+                {
+                    name: 'Sarah Johnson',
+                    email: 'admin@sustainedit.com',
+                    description: 'System Administrator'
+                }
+            ],
+            client_partner: [
+                {
+                    name: 'Michael Chen',
+                    email: 'partner@greentech.com',
+                    description: 'GreenTech Consulting'
+                },
+                {
+                    name: 'Lisa Anderson',
+                    email: 'partner@ecopartners.com',
+                    description: 'EcoPartners Group'
+                }
+            ],
+            client: [
+                {
+                    name: 'Emma Rodriguez',
+                    email: 'client@techcorp.com',
+                    description: 'TechCorp Manufacturing'
+                },
+                {
+                    name: 'James Wilson',
+                    email: 'client@localfood.com',
+                    description: 'LocalFood Co'
+                }
+            ],
+            vendor: [
+                {
+                    name: 'David Kim',
+                    email: 'vendor@steelworks.com',
+                    description: 'SteelWorks Ltd'
+                },
+                {
+                    name: 'Maria Garcia',
+                    email: 'vendor@cleanenergy.com',
+                    description: 'CleanEnergy Solutions'
+                }
+            ]
+        };
+
+        // Update login form based on selected role
+        function updateLoginForm() {
+            const roleSelect = document.getElementById('role');
+            const selectedRole = roleSelect.value;
+            const container = document.getElementById('demoAccountsContainer');
+            
+            if (!selectedRole) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 text-sm py-4">
+                        Select a role above to see demo accounts
+                    </div>
+                `;
+                return;
+            }
+
+            const accounts = demoAccounts[selectedRole] || [];
+            const roleLabels = {
+                superadmin: 'SuperAdmin',
+                client_partner: 'Client Partner',
+                client: 'Client',
+                vendor: 'Vendor'
+            };
+
+            if (accounts.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 text-sm py-4">
+                        No demo accounts available for ${roleLabels[selectedRole]}
+                    </div>
+                `;
+                return;
+            }
+
+            const accountsHtml = accounts.map(account => `
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-2">
+                    <div>
+                        <div class="font-medium text-gray-900">${account.name}</div>
+                        <div class="text-gray-600 text-sm">${account.description}</div>
+                        <div class="text-xs text-gray-500 font-mono">${account.email}</div>
+                    </div>
+                    <button onclick="quickLogin('${selectedRole}', '${account.email}')" class="px-3 py-1 bg-primary-500 text-white text-xs rounded-md hover:bg-primary-600 transition-all">
+                        Login
+                    </button>
+                </div>
+            `).join('');
+
+            container.innerHTML = accountsHtml;
+        }
+
+        // Quick login function for demo accounts
+        function quickLogin(role, email) {
+            document.getElementById('role').value = role;
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = 'password123';
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        }
+
+        // Initialize login manager
+        document.addEventListener('DOMContentLoaded', () => {
+            window.loginManager = new LoginManager();
+        });
+    </script>
+</body>
+</html>
