@@ -1,3 +1,6 @@
+// Load environment variables
+require('dotenv').config();
+
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
@@ -12,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.APP_URL || 'http://localhost:3000',
     credentials: true
 }));
 app.use(bodyParser.json());
@@ -20,11 +23,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Session configuration
 app.use(session({
-    secret: 'sustainedit-secret-key-2024', // In production, use environment variable
+    secret: process.env.SESSION_SECRET || 'fallback-secret-for-development-only',
     resave: false,
     saveUninitialized: false,
     cookie: { 
-        secure: false, // Set to true in production with HTTPS
+        secure: process.env.NODE_ENV === 'production', // HTTPS in production
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
@@ -34,11 +37,12 @@ app.use(express.static(path.join(__dirname)));
 
 // MySQL connection configuration
 const dbConfig = {
-    host: '127.0.0.1',
-    port: 3306,
-    user: 'root',
-    password: '',
-    database: 'sustainability_survey',
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: parseInt(process.env.DB_PORT) || 3306,
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'sustainability_survey',
+    socketPath: process.env.DB_SOCKET || undefined,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -528,6 +532,11 @@ app.get('/api/survey-preview', requireAuth(['superadmin']), async (req, res) => 
             error: 'Database error: ' + error.message
         });
     }
+});
+
+// Health check route for AWS load balancers
+app.get('/healthz', (req, res) => {
+    res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
 // Get all questions with optional filtering and pagination
@@ -1610,7 +1619,7 @@ app.use((req, res) => {
 });
 
 // Start server
-app.listen(PORT, async () => {
+app.listen(PORT, '0.0.0.0', async () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
     await testConnection();
     console.log('📝 CRUD Editor available at http://localhost:3000');
