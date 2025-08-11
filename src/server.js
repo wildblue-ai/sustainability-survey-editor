@@ -33,7 +33,7 @@ app.use(session({
     }
 }));
 
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // MySQL connection configuration
 const dbConfig = {
