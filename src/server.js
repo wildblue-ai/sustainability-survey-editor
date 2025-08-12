@@ -9,6 +9,7 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
+const basicAuth = require('express-basic-auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +33,17 @@ app.use(session({
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));
+
+// Basic Auth for demo protection (only in production)
+if (process.env.NODE_ENV === 'production' || process.env.ENABLE_BASIC_AUTH === 'true') {
+    app.use(basicAuth({
+        users: { 
+            [process.env.DEMO_USERNAME || 'demo']: process.env.DEMO_PASSWORD || 'password' 
+        },
+        challenge: true,
+        realm: 'Sustainability Survey Demo'
+    }));
+}
 
 app.use(express.static(path.join(__dirname, '../public')));
 

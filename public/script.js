@@ -1089,6 +1089,12 @@ class SustainabilityEditor {
                 this.currentUser = userData.user;
                 this.updateUIForUser();
                 this.loadData(); // Now load data after authentication
+                
+                // Hide loading overlay once authenticated
+                const loadingOverlay = document.getElementById('auth-loading');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
             }
         } catch (error) {
             console.error('Authentication check failed:', error);

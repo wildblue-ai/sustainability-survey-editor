@@ -3,3 +3,14 @@ node_modules/
 .DS_Store
 *.log
 sustain/
+system_prompts*
+
+# AWS deployment files
+deploy-step*.sh
+check-*.sh
+test-*.sh
+*.tar.gz
+.gitmessage
+
+# SSH keys
+*.pem
