@@ -5,10 +5,10 @@ node_modules/
 sustain/
 system_prompts*
 
-# AWS deployment files
-deploy-step*.sh
-check-*.sh
-test-*.sh
+# AWS deployment files (root level only)
+/deploy-step*.sh
+/check-*.sh
+/test-*.sh
 *.tar.gz
 .gitmessage
 
