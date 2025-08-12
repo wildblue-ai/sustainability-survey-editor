@@ -4,7 +4,8 @@
 -- Run this script as MySQL root user
 
 -- 1. Create dedicated application user
-CREATE USER IF NOT EXISTS 'sustainapp'@'localhost' IDENTIFIED BY 't2WcjaIcCKguLORtrnhg';
+-- SECURITY: Replace with secure password from your .env file
+CREATE USER IF NOT EXISTS 'sustainapp'@'localhost' IDENTIFIED BY 'YOUR_SECURE_PASSWORD_HERE';
 
 -- 2. Grant only necessary permissions (not full admin access)
 GRANT SELECT, INSERT, UPDATE, DELETE ON sustainability_survey.* TO 'sustainapp'@'localhost';
