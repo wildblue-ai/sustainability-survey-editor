@@ -172,7 +172,8 @@ mysql -u sustainapp -p sustainability_survey < database/migrations/database_migr
 3. **Development Server**: Use `npm run dev` for hot reloading
 4. **Testing**: Verify all endpoints and UI functionality
 5. **Security Check**: Ensure no credentials in code
-6. **Commit**: Use template for proper attribution and details
+6. **Update System Prompts**: Document significant user requests in `docs/system_prompts.md`
+7. **Commit**: Use template for proper attribution and details
 
 ## Troubleshooting
 
@@ -186,6 +187,17 @@ mysql -u sustainapp -p sustainability_survey < database/migrations/database_migr
 - Local MySQL uses `/tmp/mysql.sock`
 - Update `DB_SOCKET` in `.env` if connection fails
 - Verify MySQL service is running
+
+## Documentation Requirements
+
+### System Prompts Tracking
+- **Document user requests** in `docs/system_prompts.md` with:
+  - Timestamp and requester (Cheryl Aday)
+  - Original request content
+  - Context about what was implemented
+  - Technical details and approach taken
+- **Update after significant sessions** to maintain development history
+- **Include cross-references** to relevant commits and files
 
 ## Security Notes
 

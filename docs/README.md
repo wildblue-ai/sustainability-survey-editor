@@ -6,6 +6,7 @@ This directory contains all project documentation for the Sustainability Survey 
 
 ### Core Documentation
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) - Contribution guidelines and development workflow
+- [`TROUBLESHOOTING.md`](./TROUBLESHOOTING.md) - Common issues and solutions for development
 - [`system_prompts.md`](./system_prompts.md) - Historical record of system prompts and development context
 
 ### Deployment & Operations
