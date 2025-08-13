@@ -132,7 +132,7 @@
                 </div>
                 
                 <p class="text-xs text-center text-gray-500 mt-4">
-                    All demo accounts use password: <span class="font-mono font-medium">password123</span>
+                    Demo accounts have unique secure passwords. Contact admin for credentials.
                 </p>
             </div>
         </div>
@@ -306,49 +306,56 @@
             }
         }
 
-        // Demo accounts data
+        // Demo accounts data with updated secure passwords
         const demoAccounts = {
             superadmin: [
                 {
                     name: 'Sarah Johnson',
                     email: 'admin@sustainedit.com',
-                    description: 'System Administrator'
+                    description: 'System Administrator',
+                    password: 'AdminSecure2025!'
                 }
             ],
             client_partner: [
                 {
                     name: 'Michael Chen',
                     email: 'partner@greentech.com',
-                    description: 'GreenTech Consulting'
+                    description: 'GreenTech Consulting',
+                    password: 'GreenTech2025!'
                 },
                 {
                     name: 'Lisa Anderson',
                     email: 'partner@ecopartners.com',
-                    description: 'EcoPartners Group'
+                    description: 'EcoPartners Group',
+                    password: 'EcoPartner2025!'
                 }
             ],
             client: [
                 {
                     name: 'Emma Rodriguez',
                     email: 'client@techcorp.com',
-                    description: 'TechCorp Manufacturing'
+                    description: 'TechCorp Manufacturing',
+                    password: 'TechCorp2025!'
                 },
                 {
                     name: 'James Wilson',
                     email: 'client@localfood.com',
-                    description: 'LocalFood Co'
+                    description: 'LocalFood Co',
+                    password: 'LocalFood2025!'
                 }
             ],
             vendor: [
                 {
                     name: 'David Kim',
                     email: 'vendor@steelworks.com',
-                    description: 'SteelWorks Ltd'
+                    description: 'SteelWorks Ltd',
+                    password: 'GreenSteel2025!Secure'
                 },
                 {
                     name: 'Maria Garcia',
                     email: 'vendor@cleanenergy.com',
-                    description: 'CleanEnergy Solutions'
+                    description: 'CleanEnergy Solutions',
+                    password: 'CleanEnergy2025!'
                 }
             ]
         };
@@ -403,10 +410,15 @@
 
         // Quick login function for demo accounts
         function quickLogin(role, email) {
-            document.getElementById('role').value = role;
-            document.getElementById('email').value = email;
-            document.getElementById('password').value = 'password123';
-            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            const accounts = demoAccounts[role] || [];
+            const account = accounts.find(acc => acc.email === email);
+            
+            if (account) {
+                document.getElementById('role').value = role;
+                document.getElementById('email').value = email;
+                document.getElementById('password').value = account.password;
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
         }
 
         // Initialize login manager

@@ -38,7 +38,7 @@ sustainability-survey/
 ## Key Features
 
 ### Authentication & Authorization
-- **Role-based access**: Superadmin, Partner, Client roles
+- **Role-based access**: Superadmin, Partner, Client, Vendor roles
 - **Secure sessions**: bcrypt password hashing, express-session
 - **Protected routes**: Authentication middleware on all API endpoints
 
@@ -161,7 +161,7 @@ mysql -u sustainapp -p sustainability_survey < database/migrations/database_migr
 ## Important Files
 
 - **`.env`** - Environment configuration (never commit)
-- **`system_prompts.md`** - Complete instruction history (gitignored)
+- **`system_prompts.md`** - In docs folder. Complete instruction history (gitignored)
 - **`.gitmessage`** - Commit message template
 - **`CLAUDE.md`** - This file (project guidance)
 
