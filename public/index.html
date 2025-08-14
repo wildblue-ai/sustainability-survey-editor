@@ -35,9 +35,12 @@
     <!-- Authentication Loading Overlay -->
     <div id="auth-loading" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
         <div class="text-center">
-            <div class="flex items-center gap-2 text-2xl font-semibold text-primary-500 mb-4">
-                <i class="fas fa-leaf text-3xl"></i>
-                <span>SustainEdit</span>
+            <div class="flex flex-col items-center text-center mb-4">
+                <div class="flex items-center gap-2 text-xl font-bold text-primary-500 mb-1">
+                    <i class="fas fa-leaf text-2xl"></i>
+                    <span>Green-metrics.com</span>
+                </div>
+                <p class="text-sm text-gray-600">Helping today's companies improve their sustainability</p>
             </div>
             <div class="flex items-center gap-2 text-gray-600">
                 <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
@@ -49,13 +52,24 @@
         </div>
     </div>
     
+    <!-- Mobile Menu Button -->
+    <button id="mobile-menu-button" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow-lg border border-gray-200">
+        <i class="fas fa-bars text-gray-600"></i>
+    </button>
+    
+    <!-- Mobile Overlay -->
+    <div id="mobile-overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+    
     <div class="flex h-screen">
         <!-- Sidebar Navigation -->
-        <aside class="w-80 bg-white border-r border-gray-200 flex flex-col h-screen overflow-y-auto">
-            <div class="p-6 border-b border-gray-100">
-                <div class="flex items-center gap-2 text-xl font-semibold text-primary-500">
-                    <i class="fas fa-leaf text-2xl"></i>
-                    <span>SustainEdit</span>
+        <aside id="sidebar" class="fixed lg:relative w-80 lg:w-80 bg-white border-r border-gray-200 flex flex-col h-screen overflow-y-auto z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="p-4 lg:p-6 border-b border-gray-100">
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2 text-lg lg:text-xl font-bold text-primary-500 mb-1">
+                        <i class="fas fa-leaf text-xl lg:text-2xl"></i>
+                        <span>Green-metrics.com</span>
+                    </div>
+                    <p class="text-xs lg:text-sm text-gray-600 leading-tight">Helping today's companies improve their sustainability</p>
                 </div>
             </div>
             
@@ -120,38 +134,45 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 flex flex-col overflow-hidden">
+        <main class="flex-1 flex flex-col overflow-hidden lg:ml-0">
             <!-- Header -->
-            <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 gap-8">
-                <div class="flex-1">
-                    <h1 class="text-2xl font-semibold text-gray-900 mb-1">Question Library</h1>
-                    <p class="text-sm text-gray-600">Manage your sustainability survey questions</p>
-                </div>
-                <div class="flex items-center gap-6">
-                    <div class="relative min-w-80">
-                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                        <input type="text" id="searchInput" placeholder="Search questions..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all">
+            <header class="min-h-20 bg-white border-b border-gray-200 px-4 lg:px-8 py-4">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div class="flex-1 ml-12 lg:ml-0">
+                        <h1 class="text-xl lg:text-2xl font-semibold text-gray-900 mb-1">Question Library</h1>
+                        <p class="text-sm text-gray-600">Manage your sustainability survey questions</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button id="addQuestionBtn" class="inline-flex items-center gap-2 px-3 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-all text-sm font-medium">
-                            <i class="fas fa-plus text-xs"></i>
-                            <span>Add Question</span>
-                        </button>
-                        <button id="expandAllBtn" class="inline-flex items-center gap-2 px-2 py-2 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-all text-sm font-medium">
-                            <i class="fas fa-expand-alt text-xs"></i>
-                            <span class="hidden lg:inline">Expand All</span>
-                        </button>
-                        <button id="collapseAllBtn" class="inline-flex items-center gap-2 px-2 py-2 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-all text-sm font-medium">
-                            <i class="fas fa-compress-alt text-xs"></i>
-                            <span class="hidden lg:inline">Collapse All</span>
-                        </button>
+                    
+                    <!-- Search and Actions -->
+                    <div class="flex flex-col sm:flex-row gap-3 lg:gap-6">
+                        <!-- Search -->
+                        <div class="relative flex-1 lg:min-w-80">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                            <input type="text" id="searchInput" placeholder="Search questions..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all">
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2">
+                            <button id="addQuestionBtn" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-3 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-all text-sm font-medium">
+                                <i class="fas fa-plus text-xs"></i>
+                                <span class="sm:inline">Add Question</span>
+                            </button>
+                            <button id="expandAllBtn" class="inline-flex items-center justify-center gap-1 px-2 py-2 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-all text-sm font-medium">
+                                <i class="fas fa-expand-alt text-xs"></i>
+                                <span class="hidden sm:inline">Expand</span>
+                            </button>
+                            <button id="collapseAllBtn" class="inline-flex items-center justify-center gap-1 px-2 py-2 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-all text-sm font-medium">
+                                <i class="fas fa-compress-alt text-xs"></i>
+                                <span class="hidden sm:inline">Collapse</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
 
             <!-- Content Area -->
-            <div class="flex-1 overflow-y-auto p-6">
-                <div id="categoriesContainer" class="flex flex-col gap-4 max-w-4xl">
+            <div class="flex-1 overflow-y-auto p-4 lg:p-6">
+                <div id="categoriesContainer" class="flex flex-col gap-4 max-w-full lg:max-w-4xl">
                     <!-- Categories will be loaded here -->
                 </div>
                 
@@ -172,8 +193,8 @@
     </div>
 
     <!-- Question Modal -->
-    <div id="questionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-screen overflow-hidden flex flex-col">
+    <div id="questionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 lg:p-6">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-full lg:max-w-2xl max-h-screen overflow-hidden flex flex-col mx-4 lg:mx-0">
             <div class="flex items-center justify-between p-6 border-b border-gray-200">
                 <div class="flex flex-col">
                     <div id="questionIdBadge" class="text-sm text-gray-500 font-mono mb-1 hidden">QID <span id="displayQuestionId"></span></div>
@@ -184,8 +205,8 @@
                 </button>
             </div>
             
-            <form id="questionForm" class="flex-1 overflow-y-auto p-6">
-                <div class="grid grid-cols-2 gap-6">
+            <form id="questionForm" class="flex-1 overflow-y-auto p-4 lg:p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                     <div class="mb-6">
                         <label for="category" class="block text-sm font-medium text-gray-900 mb-2">Category</label>
                         <select id="category" name="category" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" required>
@@ -220,7 +241,7 @@
                               placeholder="Enter your question text here..."></textarea>
                 </div>
 
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                     <div class="mb-6">
                         <label for="questionType" class="block text-sm font-medium text-gray-900 mb-2">Question Type</label>
                         <select id="questionType" name="questionType" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" required>
@@ -246,7 +267,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="mb-6">
                         <label for="effortRating" class="block text-sm font-medium text-gray-900 mb-2">Effort Rating</label>
                         <input type="number" id="effortRating" name="effortRating" class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-3 focus:ring-primary-50 focus:border-primary-500 transition-all" 
@@ -292,5 +313,48 @@
     </div>
 
     <script src="script.js"></script>
+    
+    <!-- Mobile Navigation Script -->
+    <script>
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+        const sidebar = document.getElementById('sidebar');
+        
+        function toggleMobileMenu() {
+            const isOpen = sidebar.classList.contains('translate-x-0');
+            
+            if (isOpen) {
+                // Close menu
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                mobileOverlay.classList.add('hidden');
+            } else {
+                // Open menu
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                mobileOverlay.classList.remove('hidden');
+            }
+        }
+        
+        mobileMenuButton.addEventListener('click', toggleMobileMenu);
+        mobileOverlay.addEventListener('click', toggleMobileMenu);
+        
+        // Close mobile menu when clicking on sidebar links (for better UX)
+        sidebar.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A' && window.innerWidth < 1024) {
+                toggleMobileMenu();
+            }
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                // Desktop view - ensure sidebar is visible and overlay is hidden
+                sidebar.classList.remove('-translate-x-full', 'translate-x-0');
+                mobileOverlay.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>

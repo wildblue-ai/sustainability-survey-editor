@@ -175,6 +175,15 @@ mysql -u sustainapp -p sustainability_survey < database/migrations/database_migr
 6. **Update System Prompts**: Document significant user requests in `docs/system_prompts.md`
 7. **Commit**: Use template for proper attribution and details
 
+## Security Guidelines
+
+### Database Access Security
+- **NEVER use passwords in command line** - Passwords appear in shell history and process lists
+- **Use configuration files**: Create `.my.cnf` with secure permissions (600) for MySQL access
+- **Environment variables**: Reference credentials from `.env` file when possible
+- **Secure file permissions**: Ensure config files are readable only by owner
+- **Avoid hardcoded credentials**: Never commit passwords or secrets to repository
+
 ## Troubleshooting
 
 ### Common Issues

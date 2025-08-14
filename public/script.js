@@ -313,7 +313,7 @@ class SustainabilityEditor {
         
         // Force browser to see this is a new version
         if (result.length > 0) {
-            document.title = 'SustainEdit - ' + result.length + ' categories';
+            document.title = 'Green-metrics.com - ' + result.length + ' categories';
         }
         
         return result;
