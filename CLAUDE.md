@@ -208,6 +208,62 @@ mysql -u sustainapp -p sustainability_survey < database/migrations/database_migr
 - **Update after significant sessions** to maintain development history
 - **Include cross-references** to relevant commits and files
 
+## Current Deployment Architecture (DO NOT BREAK)
+
+### Existing Production Setup (Live System)
+- **Instance**: `sustainability-survey-app` (Lightsail nano_3_0 - $5/month)
+- **Database**: `sustainability-survey-db` (Lightsail MySQL micro_2_0 - $15/month)
+- **IP**: Static IP `98.86.81.114` attached to instance
+- **Domain**: `www.green-metrics.com` (points to static IP)
+- **Production URL**: https://www.green-metrics.com
+- **Direct IP Access**: http://98.86.81.114
+- **Process Manager**: PM2 running `src/server.js` as `sustainability-survey`
+- **Reverse Proxy**: Caddy on port 80, proxying to Node.js on port 3000
+- **SSL**: Caddy handles HTTPS for the domain
+- **Current Access**: Basic auth enabled with DEMO_USERNAME/DEMO_PASSWORD
+
+### Critical Production Configuration
+- **Database Endpoint**: `ls-7c1f4c7b75d1fafe00053c0859027e4356c41c60.cyx68ei0gu8t.us-east-1.rds.amazonaws.com`
+- **Database User**: `admin` (master user, not `sustainapp`)
+- **Database Name**: `sustainabilitydb` (not `sustainability_survey`)
+- **Environment**: Production `.env` created by `deploy-step4-app.sh`
+- **SSL**: Caddy configured for HTTP reverse proxy (HTTPS requires domain)
+
+### Deployment Scripts (Automated Sequence)
+1. `deploy-step1-instance.sh` - Creates Lightsail instance + static IP
+2. `deploy-step2-database.sh` - Creates Lightsail MySQL database  
+3. `deploy-step4-app.sh` - Deploys app, creates production .env, imports schema
+4. `deploy-step5-ssl.sh` - Configures Caddy reverse proxy for port 80
+5. `check-status.sh` - Status monitoring
+
+### CRITICAL: What NOT to Change
+- **Do not modify PM2 process name**: Must remain `sustainability-survey`
+- **Do not change database connection details**: Uses Lightsail MySQL, not RDS
+- **Do not break existing .env structure**: Production .env created by deployment script
+- **Do not modify startup command**: PM2 starts `src/server.js` directly
+- **Do not change ports**: App on 3000, Caddy on 80
+
+### AWS Secrets Manager Integration (New Addition)
+- **Purpose**: Hybrid config system for secure credential management
+- **Behavior**: Uses .env locally, AWS Secrets Manager in production
+- **Implementation**: `src/start.js` wrapper + `src/config.js` manager
+- **Production Switch**: Change PM2 to start `src/start.js` instead of `src/server.js`
+- **Secrets Created**: 
+  - `sustainability-survey/database` (with actual Lightsail endpoint)
+  - `sustainability-survey/app-config` (with session secret and demo auth)
+
+### Deployment Safety Rules
+1. **Always backup production** before major changes
+2. **Test locally first** with NODE_ENV=development  
+3. **Use PM2 restart**, not stop/start, to avoid downtime
+4. **Verify database connectivity** before restarting services
+5. **Check Caddy status** after any changes to ensure reverse proxy works
+
+### Current Login Issue Diagnosis
+- **Problem**: Basic auth working but user login failing
+- **Likely Cause**: User password hashes don't match between local/production
+- **Solution**: Update production user table with correct password hashes using AWS Secrets Manager credentials
+
 ## Security Notes
 
 - **Never commit** `.env` files or credentials

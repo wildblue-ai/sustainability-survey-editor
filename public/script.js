@@ -1194,8 +1194,10 @@ class SustainabilityEditor {
         // SuperAdmin gets survey preview access
         if (this.currentUser.role === 'superadmin') {
             toolsHtml += `
-                <a href="survey-preview.html" class="flex items-center gap-3 px-3 py-2 text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-md transition-all">
-                    <i class="fas fa-clipboard-check text-sm"></i>
+                <a href="survey-preview.html" class="grid grid-cols-[20px_1fr] gap-3 px-3 py-2 text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-md transition-all items-center">
+                    <div class="flex justify-center items-center">
+                        <i class="fas fa-clipboard-check text-sm text-primary-600"></i>
+                    </div>
                     <span class="text-sm font-medium">Survey Preview</span>
                 </a>
             `;
