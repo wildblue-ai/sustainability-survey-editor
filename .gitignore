@@ -4,6 +4,7 @@ node_modules/
 *.log
 sustain/
 system_prompts*
+CLAUDE.md
 
 # AWS deployment files (root level only)
 /deploy-step*.sh
