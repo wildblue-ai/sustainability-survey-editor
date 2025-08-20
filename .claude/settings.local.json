@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(brew services stop:*)"
+      "Bash(brew services stop:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

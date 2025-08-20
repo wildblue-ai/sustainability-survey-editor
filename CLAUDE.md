@@ -184,6 +184,32 @@ mysql -u sustainapp -p sustainability_survey < database/migrations/database_migr
 - **Secure file permissions**: Ensure config files are readable only by owner
 - **Avoid hardcoded credentials**: Never commit passwords or secrets to repository
 
+### Files Excluded from Git Repository (.gitignore)
+The following files and patterns are excluded from version control:
+
+**Security & Credentials:**
+- `.env` - Environment variables with database passwords, API keys, session secrets
+- `*.pem` - SSH private keys for server access
+- `.my.cnf` - MySQL configuration with credentials
+
+**Development Files:**
+- `node_modules/` - NPM package dependencies
+- `*.log` - Application and system log files
+- `.DS_Store` - macOS system files
+- `sustain/` - Legacy directory
+
+**Documentation & Internal Files:**
+- `system_prompts*` - Internal conversation history and system instructions
+- `.gitmessage` - Git commit message template
+
+**Deployment Scripts:**
+- `/deploy-step*.sh` - Automated AWS deployment scripts (root level only)
+- `/check-*.sh` - Status monitoring scripts (root level only) 
+- `/test-*.sh` - Testing automation scripts (root level only)
+- `*.tar.gz` - Deployment packages and archives
+
+**Important**: All credential files (.env, .pem, .my.cnf) must never be committed to avoid security breaches. The deployment scripts contain sensitive infrastructure commands and should remain local-only.
+
 ## Troubleshooting
 
 ### Common Issues
