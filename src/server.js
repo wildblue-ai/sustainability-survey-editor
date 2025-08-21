@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 const { v4: uuidv4 } = require('uuid');
 const basicAuth = require('express-basic-auth');
 
@@ -33,9 +34,25 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
+// Session store configuration
+const sessionStore = new MySQLStore({
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: parseInt(process.env.DB_PORT) || 3306,
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'sustainability_survey',
+    socketPath: process.env.DB_SOCKET || undefined,
+    createDatabaseTable: true, // Auto-create sessions table
+    clearExpired: true,
+    checkExpirationInterval: 900000, // 15 minutes
+    expiration: 86400000 // 24 hours
+});
+
 // Session configuration
 app.use(session({
+    key: 'session_cookie_name',
     secret: process.env.SESSION_SECRET || 'fallback-secret-for-development-only',
+    store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: { 
